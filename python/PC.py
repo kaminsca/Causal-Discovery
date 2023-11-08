@@ -22,22 +22,31 @@ print(f'v: {v}, n: {n}')
 
 # Set up time lagged variables
 data_time_lagged = np.empty((v, tau_max + 1, n - tau_max))
-
 for var_index in range(v):
-    lag = 0
-    for j in range(tau_max, 1, -1):
+    for j in range(tau_max):
+        lag = tau_max - j
         data_time_lagged[var_index, j, :] = data[(tau_max - lag):(n - lag), var_index]
-        lag += 1
 
 print(data_time_lagged)
-
-
+print(data_time_lagged.shape)
 
 # Loop over all variables
-    # Identify parents
-    # Loop over the max number of parents, check if there are enough parents to consider
-        #n = 0, N(Xt) = {Xt-1 ... Xt-taumax, Yt-1 ... Yt-taumax, ...}
-        # While |N(Xt)| <= n
+for var_index, var in enumerate(data_time_lagged):
+    n = 0
+    print(f'current variable shape: {var.shape}')
+    # Find parents of current variable
+    parent_vars = []
+    for y_index, y in enumerate(data_time_lagged):
+        for lag, var_lagged in enumerate(y):
+            if lag == 0 and y_index == var_index:
+                continue
+            parent_vars.append(var_lagged)
+    num_parents = len(parent_vars)
+    print(num_parents)
+    while num_parents >= n:
+        for parent in parent_vars:
             # Select n dimensional subset of N(Xt)
+            j = 1
             # Calculate conditional mutual information and partial correlation
-    # Remove links below significance threshold
+            # Remove links below significance threshold
+        n += 1
